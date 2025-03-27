@@ -3,6 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from .models import *
 from .forms import *
+from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
+from django.utils.timezone import now
+from django.shortcuts import render
+from django.http import JsonResponse
+
 
 # Create your views here.
 @login_required
@@ -62,7 +68,7 @@ def get_or_create_chatroom(request,username,):
         chatroom.members.add(other_user,request.user)
 
 
-    if not chatroom.group_name:
-        raise ValueError("Le nom du chatroom est invalide.")
+    #if not chatroom.group_name:
+    #    raise ValueError("Le nom du chatroom est invalide.")
     return redirect('chatroom', chatroom.group_name)
     #return redirect('chatroom', chatroom.group_name)
