@@ -1,7 +1,37 @@
 from django.db import models
 from django.contrib.auth.models import User
 import shortuuid
+
+from PIL import Image
+
 # Create your models here.
+
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+import base64
+import os
+
+# Create your models here.
+
+# Clé maître pour chiffrer et déchiffrer (doit être de 16, 24 ou 32 octets)
+MASTER_KEY = os.getenv('MASTER_KEY', '0123456789abcdef0123456789abcdef').encode('utf-8')
+
+def encrypt_message(key, message):
+    """Chiffrer un message avec AES"""
+    cipher = AES.new(key, AES.MODE_CBC)
+    iv = cipher.iv
+    encrypted = cipher.encrypt(pad(message.encode('utf-8'), AES.block_size))
+    return base64.b64encode(iv + encrypted).decode('utf-8')
+
+
+def decrypt_message(key, encrypted_message):
+    """Déchiffrer un message avec AES"""
+    encrypted_message = base64.b64decode(encrypted_message)
+    iv = encrypted_message[:16]
+    encrypted = encrypted_message[16:]
+    cipher = AES.new(key, AES.MODE_CBC, iv=iv)
+    return unpad(cipher.decrypt(encrypted), AES.block_size).decode('utf-8')
+
 
 class ChatGroup(models.Model):
     group_name=models.CharField(max_length=128,unique=True)
@@ -23,10 +53,28 @@ class GroupMessage(models.Model):
     group=models.ForeignKey(ChatGroup,related_name='chat_messages',on_delete=models.CASCADE)
     author=models.ForeignKey(User,on_delete=models.CASCADE)
     body=models.CharField(max_length=300)
+    encrypted_body = models.TextField(blank=True, null=True)  # Champ pour stocker le message chiffré
     created=models.DateField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        # On chiffre le message uniquement s'il y a un contenu dans 'body'
+        if self.body:
+            self.encrypted_body = encrypt_message(MASTER_KEY, self.body)
+        else:
+            self.encrypted_body = None
+        super().save(*args, **kwargs)
+
+    @property
+    def decrypted_body(self):
+        # Si vous souhaitez disposer d'un accès au texte déchiffré dans votre code,
+        # vous pouvez utiliser cette propriété.
+        if self.encrypted_body:
+            return decrypt_message(MASTER_KEY, self.encrypted_body)
+        return ""
+
     def __str__(self):
-        return f'{self.author.username} : {self.body}'
+        # Pour l'affichage dans l'administration et ailleurs, on affiche uniquement le message chiffré.
+        return f'{self.author.username}: {self.encrypted_body}'
     
     class Meta:
         ordering=['-created']
