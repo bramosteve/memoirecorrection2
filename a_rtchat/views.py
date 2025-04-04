@@ -147,3 +147,4 @@ def chatroom_leave_view(request,chatroom_name):
         chat_group.members.remove(request.user)
         messages.success(request,'you left the chat')
         return redirect('home')
+
