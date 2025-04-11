@@ -1,0 +1,6 @@
+mkdir mon_projet
+cd mon_projet
+python -m venv monenv
+monenv\Scripts\activate.bat
+pip install nom_du_package
+deactivate

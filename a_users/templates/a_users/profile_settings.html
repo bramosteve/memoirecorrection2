@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1 class="mb-8">Account Settings</h1>
+<h1 class="mb-8">Paramètres du compte</h1>
 
 <table class="w-full text-sm text-left text-gray-500">
     <tbody>
@@ -18,7 +18,7 @@
                     hx-get="{% url 'profile-emailchange' %}"
                     hx-target="#email-address"
                     hx-swap="innerHTML" >
-                    Edit
+                    Modifier
                 </a>
             </td>
         </tr>
@@ -28,8 +28,8 @@
             </th>
             <td class="pb-4 pl-4">
                 {% if user.emailaddress_set.first.verified %}
-                <span class="text-green-500">Verified</span>{% else %}
-                <span class="text-amber-500">Not verified</span>
+                <span class="text-green-500">Vérifié</span>{% else %}
+                <span class="text-amber-500">Non vérifié</span>
                 {% endif %}
             </td>
             <td class="pb-4 pl-4">
@@ -41,7 +41,7 @@
 
         <tr class="border-b">
             <th scope="row" class="py-4 text-base font-bold text-gray-900">
-                Username
+                Nom d'utilisateur
             </th>
             <td id="username" class="py-4 pl-4">
                 {{ user.username }}
@@ -51,21 +51,23 @@
                     hx-get="{% url 'profile-usernamechange' %}"
                     hx-target="#username"
                     hx-swap="innerHTML" >
-                    Edit
+                    Modifier
                 </a>
             </td>
         </tr>
 
         <tr class="">
             <th scope="row" class="py-4 text-base font-bold text-gray-900">
-                Delete Account
+                
+            Supprimer le compte
             </th>
             <td class="py-4 pl-4">
-                Once deleted, account is gone. Forever.
+                Une fois supprimé, le compte disparaît définitivement.
             </td>
             <td class="py-4 pl-4">
                 <a href="{% url 'profile-delete' %}" class="font-medium text-red-600 hover:underline">
-                    Delete
+                    
+            Supprimer le compte
                 </a>
             </td>
         </tr>

@@ -7,8 +7,8 @@
 {% block content %}
     <h1>Login</h1>
     <p>
-        If you have not created an account yet, then please
-    <a href="{% url 'account_signup' %}?next={% url 'profile-onboarding' %}">sign up</a> first.
+        Si vous n'avez pas encore créé de compte, veuillez
+    <a href="{% url 'account_signup' %}?next={% url 'profile-onboarding' %}">s'inscrire</a> first.
     </p>
     {% url 'account_login' as login_url %}
     {% element form form=form method="post" action=login_url tags="entrance,login" %}
