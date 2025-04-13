@@ -73,10 +73,20 @@ class GroupMessage(models.Model):
         if self.encrypted_body:
             return decrypt_message(MASTER_KEY, self.encrypted_body)
         return ""
+    
+    @property
+    def filename(self):
+        if self.file:
+            return os.path.basename(self.file.name)
+        else:
+            return None
 
     def __str__(self):
         # Pour l'affichage dans l'administration et ailleurs, on affiche uniquement le message chiffré.
-        return f'{self.author.username}: {self.encrypted_body}'
+        if self.body:
+            return f'{self.author.username}: {self.encrypted_body}'
+        elif self.file:
+            return f'{self.author.username}: {self.file}'
     
     class Meta:
         ordering=['-created']

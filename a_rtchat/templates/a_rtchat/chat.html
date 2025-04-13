@@ -97,10 +97,12 @@
 {% block javascript %}
 <script>
     // Fonction pour faire défiler jusqu'au bas
-    function scrollToBottom() {
+    function scrollToBottom(time=0) {
+        setTimeout(function(){
         const container = document.getElementById('chat_container');
         // Faire défiler le conteneur jusqu'à la fin
         container.scrollTo(0, container.scrollHeight);
+        },time );
     }
 
     // Défilement automatique vers le dernier message après le chargement de la page
