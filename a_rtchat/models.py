@@ -80,13 +80,21 @@ class GroupMessage(models.Model):
             return os.path.basename(self.file.name)
         else:
             return None
-
+    """
     def __str__(self):
         # Pour l'affichage dans l'administration et ailleurs, on affiche uniquement le message chiffré.
         if self.body:
             return f'{self.author.username}: {self.encrypted_body}'
         elif self.file:
-            return f'{self.author.username}: {self.file}'
+            return f'{self.author.username}: {self.file}' """
+    def __str__(self):
+        if self.body:
+            return f'{self.author.username}: {self.encrypted_body}'
+        elif self.file:
+            return f'{self.author.username}: {self.filename}'
+        else:
+            return f'{self.author.username}: (message vide)'
+
     
     class Meta:
         ordering=['-created']
